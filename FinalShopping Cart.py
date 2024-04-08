@@ -89,13 +89,30 @@ def UpdateDatabase():
 
 
 def showCart():
-    for item,Quantity in cartItems:
-        allItems=item+"\n"
-        allQuantity=str(Quantity)+"\n"
-    allItemsLabel=Label(text=allItems)
-    allItemsLabel.grid(row=row_count+5,column=0)
-    allQuantityLabel=Label(text=allQuantity)
-    allQuantityLabel.grid(row=row_count+5,column=1)
+    cartWindow=Tk()
+    cartWindow.title("Cart")
+    allItems=""
+    allQuantity=""
+    allPrice=""
+    for tupleCart in cartItems:
+        allItems+=tupleCart[0]+"\n"
+        allQuantity+=str(tupleCart[1])+"\n"
+        allPrice+=str(items[tupleCart[0]]*tupleCart[1])+"\n"
+    allItemsLabel=Label(cartWindow,text=allItems)
+    allItemsLabel.grid(row=1,column=0)
+    ItemsLabel=Label(cartWindow,text="Items",font=("Arial",15,"bold"))
+    ItemsLabel.grid(row=0,column=0)
+
+    quantityLabel=Label(cartWindow,text="Quantity",font=("Arial",15,"bold"))
+    quantityLabel.grid(row=0,column=1)
+    allQuantityLabel=Label(cartWindow,text=allQuantity)
+    allQuantityLabel.grid(row=1,column=1)
+    
+    quantityLabel=Label(cartWindow,text="Price",font=("Arial",15,"bold"))
+    quantityLabel.grid(row=0,column=2)
+    allQuantityLabel=Label(cartWindow,text=allPrice)
+    allQuantityLabel.grid(row=1,column=2)
+    
 
 def removeItem():
     pass
