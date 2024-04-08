@@ -9,14 +9,14 @@ root.iconbitmap("C:\\Users\\gmadh\\Downloads\\cart_icon-icons.com_48341.ico")
 
 
 # Created a database to store all the shop information
-# conn=sqlite3.connect("Shop.db")
-# c=conn.cursor()
-# c.execute('''Create Table Inventory
-#           (ProductName varchar(50),
-#           Quantity int,
-#           Price int)''')
-# conn.commit()
-# c.close()
+conn=sqlite3.connect("Shop.db")
+c=conn.cursor()
+c.execute('''CREATE TABLE IF NOT EXISTS Inventory
+          (ProductName varchar(50),
+          Quantity int,
+          Price int)''')
+conn.commit()
+c.close()
 
 
 # A layout to access database
@@ -162,11 +162,17 @@ def submitButton():
     
     conn=sqlite3.connect("Shop.db")
     c=conn.cursor()
+    for i in range(len(cartItemList)):
+        c.execute("Select Quantity from Inventory where ProductName=:item",{"item":cartItems[i][0]})
+        Quantity = c.fetchall()
+        print(Quantity)
+        newQuantity=int(Quantity[0][0]) - cartItems[i][1]
+        if(newQuantity>=0):
+            c.execute('''UPDATE Inventory 
+                SET Quantity = :newQuantity 
+                WHERE ProductName = :item 
+            ''', {'item': cartItems[i][0], 'newQuantity': newQuantity})
 
-    
-
-    conn.commit()
-    c.close()
     response=messagebox.askokcancel("Submit","Do you wish to submit")
     if(response==True):
         top=Toplevel()
@@ -214,6 +220,9 @@ def submitButton():
             totalPriceLabel.grid(row=2,column=2)
             totalLabel=Label(top,text=sum,font=("Comic Sans MS", 25, "bold"),width=10,height=5,bd=5,bg="#72A0C1")
             totalLabel.grid(row=2,column=3)
+
+    conn.commit()
+    c.close()
 
 # This function adds new item to the database
 def addClicked():
