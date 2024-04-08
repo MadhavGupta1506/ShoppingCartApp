@@ -28,16 +28,17 @@ root.iconbitmap("C:\\Users\\gmadh\\Downloads\\cart_icon-icons.com_48341.ico")
 # c.close()
 
 # Declared a variable sum to get total of all the items in the cart globally
-global sum
-sum=0
 
 #Created a list to store cart items
 cartItems=[]
 
+global sum
+sum=0
 def edit():
     global update
     update=Tk()
-    
+    update.title("Inventory App")
+    update.iconbitmap("C:\\Users\\gmadh\\Downloads\\cart_icon-icons.com_48341.ico")
     global ProductName,Quantity,price,recordId
     
     recordIdLabel=Label(update,text="Enter Oid:")
@@ -91,6 +92,7 @@ def UpdateDatabase():
 def showCart():
     cartWindow=Tk()
     cartWindow.title("Cart")
+    cartWindow.iconbitmap("C:\\Users\\gmadh\\Downloads\\cart_icon-icons.com_48341.ico")
     allItems=""
     allQuantity=""
     allPrice=""
@@ -112,10 +114,49 @@ def showCart():
     quantityLabel.grid(row=0,column=2)
     allQuantityLabel=Label(cartWindow,text=allPrice)
     allQuantityLabel.grid(row=1,column=2)
-    
 
-def removeItem():
-    pass
+def removeCart(item):
+    global sum
+    quantity=deleteClicked.get()
+    deleteSum=quantity*items[item]
+    for i in range(len(cartItems)):
+        if(cartItems[i][0]==item):
+            cartItems[i][1]-=quantity
+            cartItems[i][2]-=deleteSum
+    sum-=deleteSum
+    print(sum)
+    deleteWindow.destroy()
+    deleteFunction()
+    
+def deleteItem(quantity,row,column,item):
+    global deleteClicked
+    deleteClicked=IntVar()
+    deleteClicked.set(1)
+    
+    drop=OptionMenu(deleteWindow,deleteClicked,*range(1,quantity+1))
+    drop.grid(row=row+1,column=column)
+    deleteButton=Button(deleteWindow,text="Delete",command=lambda item=item:removeCart(item))
+    deleteButton.grid(row=row+1,column=column+1)
+
+    
+def deleteFunction():
+    global deleteWindow
+    deleteWindow=Tk()
+    deleteWindow.title("Delete items")
+    deleteWindow.iconbitmap("C:\\Users\\gmadh\\Downloads\\cart_icon-icons.com_48341.ico")
+
+    count=0
+    row_count=0
+    column_count=0
+    for i in  range(len(cartItems)):
+        if(column_count%18==0):
+            column_count=0
+            row_count+=2
+        itemButton=Button(deleteWindow,text=cartItems[i][0]+"\n"+str(cartItems[i][2]),fg="#F0F8FF",background="#0066b2",height=2,width=12,padx=10,pady=10,command=lambda quantity=cartItems[i][1],item=cartItems[i][0],row=row_count,column=column_count:deleteItem(quantity,row,column,item))
+        itemButton.grid(row=row_count,column=column_count,padx=10,pady=20,columnspan=3)
+        column_count+=3
+        count+=1
+        
 #  Created this function to get the final price of the cart
 def submitButton():
     
@@ -139,14 +180,40 @@ def submitButton():
             totalLabel=Label(top,bg="#72A0C1",text=sum,width=100,height=20,bd=5)
             totalLabel.pack()
         else:
+            allItems=""
+            allQuantity=""
+            allPrice=""
+            totalPrice=""
             #If there are items in the cart this loop label them on the toplevel with their total
-            for i in range(len(cartItems)):
-                itemLabel=Label(top,text=f"{cartItems[i]}",font= ("Courier New",15,"bold"),bg="#72A0C1",padx=30,width=5)
-                itemPrice=Label(top,text=f"{cartItems[i]}",bg="#72A0C1",font=("Courier New",15,"bold"))
-                itemLabel.grid(row=i,column=0,padx=30)
-                itemPrice.grid(row=i,column=1,padx=30)
+            for tupleCart in cartItems:
+                allItems+=tupleCart[0]+"\n"
+                allQuantity+=str(tupleCart[1])+"\n"
+                allPrice+=str(items[tupleCart[0]])+"\n"
+                totalPrice+=str(items[tupleCart[0]]*tupleCart[1])+"\n"
+            allItemsLabel=Label(top,text=allItems,bg="#72A0C1")
+            allItemsLabel.grid(row=1,column=0)
+            ItemsLabel=Label(top,text="Items",font=("Arial",15,"bold"),bg="#72A0C1")
+            ItemsLabel.grid(row=0,column=0)
+
+            quantityLabel=Label(top,text="Quantity",font=("Arial",15,"bold"),bg="#72A0C1")
+            quantityLabel.grid(row=0,column=1)
+            allQuantityLabel=Label(top,text=allQuantity,bg="#72A0C1")
+            allQuantityLabel.grid(row=1,column=1)
+            
+            quantityLabel=Label(top,text="Price",font=("Arial",15,"bold"),bg="#72A0C1")
+            quantityLabel.grid(row=0,column=2)
+            allQuantityLabel=Label(top,text=allPrice,bg="#72A0C1")
+            allQuantityLabel.grid(row=1,column=2)
+            
+            totalPriceLabel=Label(top,text="Total Price",font=("Arial",15,"bold"),bg="#72A0C1")
+            totalPriceLabel.grid(row=0,column=3)
+            allTotalLabel=Label(top,text=totalPrice,bg="#72A0C1")
+            allTotalLabel.grid(row=1,column=3)
+            
+            totalPriceLabel=Label(top,text="Total Bill",font=("Arial",15,"bold"),bg="#72A0C1")
+            totalPriceLabel.grid(row=2,column=2)
             totalLabel=Label(top,text=sum,font=("Comic Sans MS", 25, "bold"),width=10,height=5,bd=5,bg="#72A0C1")
-            totalLabel.grid(row=len(cartItems),column=1)
+            totalLabel.grid(row=2,column=3)
 
 # This function adds new item to the database
 def addClicked():
@@ -210,32 +277,49 @@ def Query():
 
 # This function adds items to the cart 
 def add(item,row,column,quantity):
-    global clicked
+    global clicked,drop
+    
     clicked=IntVar()
     clicked.set(1)
     
+    global addButton
     # This creates a dropdown menu for the quantity
     drop=OptionMenu(bill,clicked,*range(1,quantity+1))
     drop.grid(row=row+1,column=column)
-    addButton=Button(bill,text="Add",command=lambda:addCart(item))
+    addButton=Button(bill,text="Add",command=lambda:addCart(item,row,column))
     addButton.grid(row=row+1,column=column+1)
-    
 
-def addCart(item):
+
+global cartItemsList
+cartItemList=[]
+def addCart(item,row,column):
     global sum
     global cartItems
-    
-    print(item)
-    sum+=items[item]*clicked.get()
-    cartItems.append((item,clicked.get())) 
-    print(cartItems)
+    Quantity=clicked.get()
+    price=items[item]
+    if(item in cartItemList):
+        for i in range(len(cartItems)):
+            if(item in cartItems[i]):
+                sum-=cartItems[i][1]*price
+                sum+=price*Quantity
+                cartItems.remove(cartItems[i])
+                cartItems.append([item,Quantity,price])        
+    else:        
+        sum+=price*Quantity
+        cartItemList.append(item)
+        cartItems.append([item,Quantity,price*Quantity]) 
+    addButton=Button(bill,text="Add",command=lambda:addCart(item),state=DISABLED)
+    addButton.grid(row=row+1,column=column+1)
     print(sum)
+    print(price*Quantity)
     
-
+    
 def billWindow():    
     root.destroy()
     global bill
     bill=Tk()
+    bill.title("Create Bill")
+    bill.iconbitmap("C:\\Users\\gmadh\\Downloads\\cart_icon-icons.com_48341.ico")
     global row_count, column_count
     row_count=0
     column_count=0
@@ -283,7 +367,7 @@ def billWindow():
     itemsInCart.grid(row=len(itemList),column=9,columnspan=3,padx=10,pady=10,ipadx=30,ipady=20)
 
 
-    delete=Button(text="Delete Item",command=removeItem,bd=4,background="#ba0f30",activebackground="#880808")
+    delete=Button(text="Delete Item",command=deleteFunction,bd=4,background="#ba0f30",activebackground="#880808")
     delete.grid(row=len(itemList),column=0,columnspan=3,padx=10,pady=10,ipadx=30,ipady=20)
 
     
