@@ -1,1 +1,1 @@
-quantity
+fg="#2c3e50"
