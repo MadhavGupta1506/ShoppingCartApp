@@ -6,7 +6,7 @@ from tkinter import messagebox
 root=Tk()
 root.title("Inventory App")
 root.config(background="#3498db")
-root.iconbitmap("C:\\Users\\gmadh\\Downloads\\cart_icon-icons.com_48341.ico")
+root.iconbitmap("cart_icon-icons.com_48341.ico")
 
 
 
@@ -42,7 +42,7 @@ def edit():
     update=Tk()
     update.config(background="#3498db")
     update.title("Inventory App")
-    update.iconbitmap("C:\\Users\\gmadh\\Downloads\\cart_icon-icons.com_48341.ico")
+    update.iconbitmap("cart_icon-icons.com_48341.ico")
     global ProductName,Quantity,price,recordId
     
     recordIdLabel=Label(update,text="Enter Oid:",background="#3498db")
@@ -96,7 +96,7 @@ def UpdateDatabase():
 def showCart():
     cartWindow=Tk()
     cartWindow.title("Cart")
-    cartWindow.iconbitmap("C:\\Users\\gmadh\\Downloads\\cart_icon-icons.com_48341.ico")
+    cartWindow.iconbitmap("cart_icon-icons.com_48341.ico")
     allItems=""
     allQuantity=""
     allPrice=""
@@ -146,7 +146,7 @@ def deleteFunction():
     global deleteWindow
     deleteWindow=Tk()
     deleteWindow.title("Delete items")
-    deleteWindow.iconbitmap("C:\\Users\\gmadh\\Downloads\\cart_icon-icons.com_48341.ico")
+    deleteWindow.iconbitmap("cart_icon-icons.com_48341.ico")
 
     count=0
     row_count=0
@@ -180,7 +180,7 @@ def submitButton():
     if(response==True):
         top=Toplevel()
         top.title("Bill")
-        top.iconbitmap("C:\\Users\\gmadh\\Downloads\\cart_icon-icons.com_48341.ico")
+        top.iconbitmap("cart_icon-icons.com_48341.ico")
         top.configure(background="#FBF3D5")
     
         
@@ -324,7 +324,7 @@ def billWindow():
     bill=Tk()
     bill.config(background="#3498db")
     bill.title("Create Bill")
-    bill.iconbitmap("C:\\Users\\gmadh\\Downloads\\cart_icon-icons.com_48341.ico")
+    bill.iconbitmap("cart_icon-icons.com_48341.ico")
     global row_count, column_count
     row_count=0
     column_count=0

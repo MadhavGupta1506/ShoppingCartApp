@@ -1,1 +1,1 @@
-fg="#2c3e50"
+cart_icon
